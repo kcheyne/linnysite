@@ -1,12 +1,91 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>My Static Web Page</title>
+    <meta charset="UTF-8">
+    <title>Jump Game</title>
+    <style>
+        /* CSS code for the game */
+        #game{
+            width: 500px;
+            height: 200px;
+            border: 1px solid black;
+            margin: auto;
+        }
+        #character{
+            width: 20px;
+            height: 50px;
+            background-color: red;
+            position: relative;
+            top: 150px; /* game height - character height (200 - 50) */
+        }
+        #block{
+            width: 20px;
+            height: 20px;
+            background-color: green;
+            position: relative;
+            top: 130px; /* game height - block height (200 - 20) */
+            left: 470px; /* game width - block width (500 - 20) */
+        }
+        @keyframes jump{
+            0%{top: 150px;}
+            30%{top: 100px;}
+            70%{top: 100px;}
+            100%{top: 150px;}
+        }
+        .animate{
+            animation: jump 300ms linear;
+        }
+        @keyframes move{
+            0%{left: 470px;}
+            100%{left: -20px;}
+        }
+        .move{
+            animation: move 2s linear infinite;
+        }
+    </style>
+    <script>
+        // JavaScript code for the game
+        var character = document.getElementById("character"); // get the character element
+        var block = document.getElementById("block"); // get the block element
+        var game = document.getElementById("game"); // get the game element
+        var score = 0; // initialize the score
+        var playing = true; // initialize the game state
+
+        function jump(){ // define the jump function
+            if(character.classList != "animate"){ // check if the character is not already jumping
+                character.classList.add("animate"); // add the animate class to the character
+            }
+            setTimeout(function(){ // set a timeout function to remove the animate class after 300ms
+                character.classList.remove("animate");
+            },300);
+        }
+
+        function move(){ // define the move function
+            block.classList.add("move"); // add the move class to the block
+        }
+
+        function checkDead(){ // define the checkDead function
+            var characterTop = parseInt(window.getComputedStyle(character).getPropertyValue("top")); // get the top position of the character
+            var blockLeft = parseInt(window.getComputedStyle(block).getPropertyValue("left")); // get the left position of the block
+            if(blockLeft < 20 && blockLeft > 0 && characterTop >= 130){ // check if the character and the block are colliding
+                block.classList.remove("move"); // remove the move class from the block
+                block.style.display = "none"; // hide the block
+                alert("Game Over. Score: " + score); // show an alert message with the score
+                playing = false; // set the game state to false
+            }else{ // if the character and the block are not colliding
+                score++; // increment the score
+            }
+        }
+
+        game.addEventListener("click", jump); // add an event listener to the game element that calls the jump function when clicked
+        move(); // call the move function
+        setInterval(checkDead, 10); // call the checkDead function every 10ms
+    </script>
 </head>
 <body>
-    <h1>Welcome to My Static Web Page</h1>
-    <p>This is a simple web page that I created with the help of Copilot.</p>
-    <img src="linnystream.png" alt="My Image" width="300" height="200">
-    <p>This is an image that I added to my web page. You can replace it with your own image by changing the src attribute.</p>
+    <div id="game"> <!-- the game element -->
+        <div id="character"></div> <!-- the character element -->
+        <div id="block"></div> <!-- the block element -->
+    </div>
 </body>
 </html>
