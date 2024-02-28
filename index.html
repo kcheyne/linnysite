@@ -2,90 +2,169 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Jump Game</title>
+    <title>Quiz Game</title>
     <style>
         /* CSS code for the game */
         #game{
             width: 500px;
-            height: 200px;
+            height: 300px;
             border: 1px solid black;
             margin: auto;
         }
-        #character{
-            width: 20px;
+        #question{
+            font-size: 20px;
+            text-align: center;
+            margin: 20px;
+        }
+        #answers{
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+        }
+        .answer{
+            width: 200px;
             height: 50px;
-            background-color: red;
-            position: relative;
-            top: 150px; /* game height - character height (200 - 50) */
+            background-color: lightblue;
+            border: 1px solid blue;
+            margin: 10px;
+            cursor: pointer;
         }
-        #block{
-            width: 20px;
-            height: 20px;
-            background-color: green;
-            position: relative;
-            top: 130px; /* game height - block height (200 - 20) */
-            left: 470px; /* game width - block width (500 - 20) */
+        .correct{
+            background-color: lightgreen;
+            border: 1px solid green;
         }
-        @keyframes jump{
-            0%{top: 150px;}
-            30%{top: 100px;}
-            70%{top: 100px;}
-            100%{top: 150px;}
+        .wrong{
+            background-color: pink;
+            border: 1px solid red;
         }
-        .animate{
-            animation: jump 300ms linear;
+        #score{
+            font-size: 18px;
+            text-align: center;
+            margin: 10px;
         }
-        @keyframes move{
-            0%{left: 470px;}
-            100%{left: -20px;}
+        #timer{
+            font-size: 18px;
+            text-align: center;
+            margin: 10px;
         }
-        .move{
-            animation: move 2s linear infinite;
+        #result{
+            font-size: 24px;
+            text-align: center;
+            margin: 20px;
         }
     </style>
     <script>
         // JavaScript code for the game
-        var character = document.getElementById("character"); // get the character element
-        var block = document.getElementById("block"); // get the block element
         var game = document.getElementById("game"); // get the game element
-        var score = 0; // initialize the score
-        var playing = true; // initialize the game state
-
-        function jump(){ // define the jump function
-            if(character.classList != "animate"){ // check if the character is not already jumping
-                character.classList.add("animate"); // add the animate class to the character
+        var question = document.getElementById("question"); // get the question element
+        var answers = document.getElementsByClassName("answer"); // get the answer elements
+        var score = document.getElementById("score"); // get the score element
+        var timer = document.getElementById("timer"); // get the timer element
+        var result = document.getElementById("result"); // get the result element
+        var questions = [ // create an array of questions and answers
+            {
+                question: "What is the capital of France?",
+                answers: ["Paris", "Berlin", "Rome", "London"],
+                correct: 0 // the index of the correct answer
+            },
+            {
+                question: "Who wrote the Harry Potter series?",
+                answers: ["J.R.R. Tolkien", "George R.R. Martin", "J.K. Rowling", "Stephen King"],
+                correct: 2
+            },
+            {
+                question: "What is the name of the largest bone in the human body?",
+                answers: ["Femur", "Humerus", "Tibia", "Fibula"],
+                correct: 0
+            },
+            {
+                question: "What is the most spoken language in the world?",
+                answers: ["English", "Spanish", "Mandarin", "Hindi"],
+                correct: 2
+            },
+            {
+                question: "What is the name of the closest star to Earth?",
+                answers: ["Alpha Centauri", "Sirius", "Proxima Centauri", "The Sun"],
+                correct: 3
             }
-            setTimeout(function(){ // set a timeout function to remove the animate class after 300ms
-                character.classList.remove("animate");
-            },300);
+        ];
+        var index = 0; // the index of the current question
+        var points = 0; // the number of points the user has
+        var time = 60; // the time limit in seconds
+        var interval; // the variable to store the interval function
+
+        function startGame(){ // define the startGame function
+            showQuestion(); // call the showQuestion function
+            score.innerHTML = "Score: " + points; // show the initial score
+            timer.innerHTML = "Time: " + time; // show the initial time
+            interval = setInterval(updateTime, 1000); // start the interval function that calls the updateTime function every second
         }
 
-        function move(){ // define the move function
-            block.classList.add("move"); // add the move class to the block
-        }
-
-        function checkDead(){ // define the checkDead function
-            var characterTop = parseInt(window.getComputedStyle(character).getPropertyValue("top")); // get the top position of the character
-            var blockLeft = parseInt(window.getComputedStyle(block).getPropertyValue("left")); // get the left position of the block
-            if(blockLeft < 20 && blockLeft > 0 && characterTop >= 130){ // check if the character and the block are colliding
-                block.classList.remove("move"); // remove the move class from the block
-                block.style.display = "none"; // hide the block
-                alert("Game Over. Score: " + score); // show an alert message with the score
-                playing = false; // set the game state to false
-            }else{ // if the character and the block are not colliding
-                score++; // increment the score
+        function showQuestion(){ // define the showQuestion function
+            question.innerHTML = questions[index].question; // show the current question
+            for(var i = 0; i < answers.length; i++){ // loop through the answer elements
+                answers[i].innerHTML = questions[index].answers[i]; // show the possible answers
+                answers[i].onclick = checkAnswer; // add an onclick event that calls the checkAnswer function
             }
         }
 
-        game.addEventListener("click", jump); // add an event listener to the game element that calls the jump function when clicked
-        move(); // call the move function
-        setInterval(checkDead, 10); // call the checkDead function every 10ms
+        function checkAnswer(){ // define the checkAnswer function
+            var choice = this.innerHTML; // get the choice of the user
+            var correct = questions[index].answers[questions[index].correct]; // get the correct answer
+            if(choice == correct){ // check if the choice is correct
+                points++; // increment the points
+                score.innerHTML = "Score: " + points; // update the score
+                this.classList.add("correct"); // add the correct class to the answer element
+            }else{ // if the choice is wrong
+                this.classList.add("wrong"); // add the wrong class to the answer element
+            }
+            for(var i = 0; i < answers.length; i++){ // loop through the answer elements
+                answers[i].onclick = null; // remove the onclick event
+            }
+            setTimeout(nextQuestion, 1000); // set a timeout function that calls the nextQuestion function after 1 second
+        }
+
+        function nextQuestion(){ // define the nextQuestion function
+            index++; // increment the index
+            if(index < questions.length){ // check if there are more questions
+                for(var i = 0; i < answers.length; i++){ // loop through the answer elements
+                    answers[i].classList.remove("correct", "wrong"); // remove the correct and wrong classes
+                }
+                showQuestion(); // call the showQuestion function
+            }else{ // if there are no more questions
+                endGame(); // call the endGame function
+            }
+        }
+
+        function updateTime(){ // define the updateTime function
+            time--; // decrement the time
+            timer.innerHTML = "Time: " + time; // update the time
+            if(time == 0){ // check if the time is up
+                endGame(); // call the endGame function
+            }
+        }
+
+        function endGame(){ // define the endGame function
+            clearInterval(interval); // stop the interval function
+            game.style.display = "none"; // hide the game element
+            result.innerHTML = "You scored " + points + " out of " + questions.length; // show the result
+        }
+
+        startGame(); // call the startGame function
     </script>
 </head>
 <body>
     <div id="game"> <!-- the game element -->
-        <div id="character"></div> <!-- the character element -->
-        <div id="block"></div> <!-- the block element -->
+        <div id="question"></div> <!-- the question element -->
+        <div id="answers"> <!-- the answers element -->
+            <div class="answer"></div> <!-- the answer elements -->
+            <div class="answer"></div>
+            <div class="answer"></div>
+            <div class="answer"></div>
+        </div>
+        <div id="score"></div> <!-- the score element -->
+        <div id="timer"></div> <!-- the timer element -->
     </div>
+    <div id="result"></div> <!-- the result element -->
 </body>
 </html>
