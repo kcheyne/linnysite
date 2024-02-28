@@ -2,169 +2,65 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Quiz Game</title>
+    <title>Minecraft Page</title>
     <style>
-        /* CSS code for the game */
-        #game{
-            width: 500px;
-            height: 300px;
-            border: 1px solid black;
-            margin: auto;
+        /* CSS code for the page */
+        body{
+            font-family: Arial, sans-serif;
+            background-color: #F0F0F0;
+            color: #333333;
         }
-        #question{
-            font-size: 20px;
+        h1{
             text-align: center;
+            font-size: 36px;
             margin: 20px;
+            color: #FF99CC;
         }
-        #answers{
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-around;
-        }
-        .answer{
-            width: 200px;
-            height: 50px;
-            background-color: lightblue;
-            border: 1px solid blue;
-            margin: 10px;
-            cursor: pointer;
-        }
-        .correct{
-            background-color: lightgreen;
-            border: 1px solid green;
-        }
-        .wrong{
-            background-color: pink;
-            border: 1px solid red;
-        }
-        #score{
-            font-size: 18px;
-            text-align: center;
-            margin: 10px;
-        }
-        #timer{
-            font-size: 18px;
-            text-align: center;
-            margin: 10px;
-        }
-        #result{
+        h2{
             font-size: 24px;
-            text-align: center;
-            margin: 20px;
+            margin: 10px;
+            color: #99CCFF;
+        }
+        p{
+            font-size: 18px;
+            margin: 10px;
+        }
+        a{
+            color: #66CC99;
+            text-decoration: none;
+        }
+        a:hover{
+            text-decoration: underline;
+        }
+        ul{
+            list-style-type: none;
+            margin: 10px;
+            padding: 0;
+        }
+        li{
+            margin: 10px;
         }
     </style>
-    <script>
-        // JavaScript code for the game
-        var game = document.getElementById("game"); // get the game element
-        var question = document.getElementById("question"); // get the question element
-        var answers = document.getElementsByClassName("answer"); // get the answer elements
-        var score = document.getElementById("score"); // get the score element
-        var timer = document.getElementById("timer"); // get the timer element
-        var result = document.getElementById("result"); // get the result element
-        var questions = [ // create an array of questions and answers
-            {
-                question: "What is the capital of France?",
-                answers: ["Paris", "Berlin", "Rome", "London"],
-                correct: 0 // the index of the correct answer
-            },
-            {
-                question: "Who wrote the Harry Potter series?",
-                answers: ["J.R.R. Tolkien", "George R.R. Martin", "J.K. Rowling", "Stephen King"],
-                correct: 2
-            },
-            {
-                question: "What is the name of the largest bone in the human body?",
-                answers: ["Femur", "Humerus", "Tibia", "Fibula"],
-                correct: 0
-            },
-            {
-                question: "What is the most spoken language in the world?",
-                answers: ["English", "Spanish", "Mandarin", "Hindi"],
-                correct: 2
-            },
-            {
-                question: "What is the name of the closest star to Earth?",
-                answers: ["Alpha Centauri", "Sirius", "Proxima Centauri", "The Sun"],
-                correct: 3
-            }
-        ];
-        var index = 0; // the index of the current question
-        var points = 0; // the number of points the user has
-        var time = 60; // the time limit in seconds
-        var interval; // the variable to store the interval function
-
-        function startGame(){ // define the startGame function
-            showQuestion(); // call the showQuestion function
-            score.innerHTML = "Score: " + points; // show the initial score
-            timer.innerHTML = "Time: " + time; // show the initial time
-            interval = setInterval(updateTime, 1000); // start the interval function that calls the updateTime function every second
-        }
-
-        function showQuestion(){ // define the showQuestion function
-            question.innerHTML = questions[index].question; // show the current question
-            for(var i = 0; i < answers.length; i++){ // loop through the answer elements
-                answers[i].innerHTML = questions[index].answers[i]; // show the possible answers
-                answers[i].onclick = checkAnswer; // add an onclick event that calls the checkAnswer function
-            }
-        }
-
-        function checkAnswer(){ // define the checkAnswer function
-            var choice = this.innerHTML; // get the choice of the user
-            var correct = questions[index].answers[questions[index].correct]; // get the correct answer
-            if(choice == correct){ // check if the choice is correct
-                points++; // increment the points
-                score.innerHTML = "Score: " + points; // update the score
-                this.classList.add("correct"); // add the correct class to the answer element
-            }else{ // if the choice is wrong
-                this.classList.add("wrong"); // add the wrong class to the answer element
-            }
-            for(var i = 0; i < answers.length; i++){ // loop through the answer elements
-                answers[i].onclick = null; // remove the onclick event
-            }
-            setTimeout(nextQuestion, 1000); // set a timeout function that calls the nextQuestion function after 1 second
-        }
-
-        function nextQuestion(){ // define the nextQuestion function
-            index++; // increment the index
-            if(index < questions.length){ // check if there are more questions
-                for(var i = 0; i < answers.length; i++){ // loop through the answer elements
-                    answers[i].classList.remove("correct", "wrong"); // remove the correct and wrong classes
-                }
-                showQuestion(); // call the showQuestion function
-            }else{ // if there are no more questions
-                endGame(); // call the endGame function
-            }
-        }
-
-        function updateTime(){ // define the updateTime function
-            time--; // decrement the time
-            timer.innerHTML = "Time: " + time; // update the time
-            if(time == 0){ // check if the time is up
-                endGame(); // call the endGame function
-            }
-        }
-
-        function endGame(){ // define the endGame function
-            clearInterval(interval); // stop the interval function
-            game.style.display = "none"; // hide the game element
-            result.innerHTML = "You scored " + points + " out of " + questions.length; // show the result
-        }
-
-        startGame(); // call the startGame function
-    </script>
 </head>
 <body>
-    <div id="game"> <!-- the game element -->
-        <div id="question"></div> <!-- the question element -->
-        <div id="answers"> <!-- the answers element -->
-            <div class="answer"></div> <!-- the answer elements -->
-            <div class="answer"></div>
-            <div class="answer"></div>
-            <div class="answer"></div>
-        </div>
-        <div id="score"></div> <!-- the score element -->
-        <div id="timer"></div> <!-- the timer element -->
-    </div>
-    <div id="result"></div> <!-- the result element -->
+    <h1>Minecraft Page</h1>
+    <p>This is a page about Minecraft, the popular sandbox game that lets you create and explore infinite worlds. Here you can find some links to the top 5 Minecraft streamers on YouTube, as well as some tips and tricks to improve your game.</p>
+    <h2>Top 5 Minecraft Streamers on YouTube</h2>
+    <p>These are some of the most popular and entertaining Minecraft YouTubers, who provide tutorials, playthroughs, and discussions all about Minecraft. You can click on their names to visit their channels and watch their videos.</p>
+    <ul>
+        <li><a href="^8^">DanTDM</a>: He has over 26 million subscribers and almost 19 billion views. He plays various games, but Minecraft is his specialty. He often does custom maps, mods, and challenges.</li>
+        <li><a href="^9^">Jelly</a>: He has over 23 million subscribers and over 14 billion views. He plays Minecraft with his friends and does funny and crazy things. He also plays other games, such as GTA 5 and Roblox.</li>
+        <li><a href="^10^">PrestonPlayz</a>: He has over 22 million subscribers and over 7 billion views. He plays Minecraft with his wife and friends, and does pranks, mini-games, and parkour. He also has other channels for different games and vlogs.</li>
+        <li><a href="^11^">PopularMMOs</a>: He has over 17 million subscribers and over 14 billion views. He plays Minecraft with his girlfriend and does mod showcases, mob battles, and custom maps. He also plays other games, such as Fortnite and Among Us.</li>
+        <li><a href="^12^">Technoblade</a>: He has over 7 million subscribers and over 1 billion views. He is known for his skills and strategies in Minecraft PvP, especially in the Hypixel server. He also participates in various Minecraft events and collaborations.</li>
+    </ul>
+    <h2>Minecraft Tips and Tricks</h2>
+    <p>These are some links to articles and videos that can teach you some useful tips and tricks for Minecraft, such as how to find diamonds, how to avoid creepers, how to make a portal, and more. You can click on the titles to access the resources.</p>
+    <ul>
+        <li><a href="^4^">Minecraft: 18 Tricks From The Game You May Not Know</a>: This article lists 18 tricks that can help you improve your game and avoid common mistakes, such as using trapdoors as walls, breaking blocks on the northmost face, and using lava buckets as fuel.</li>
+        <li><a href="^5^">Tutorial: 28 Useful Minecraft Tips</a>: This video shows 28 tips and tricks for Minecraft, such as how to find buried treasure and stronghold using sub-chunk coordinates, how to make a portal to the nether without obsidian, and how to use fortune on crops and other blocks.</li>
+        <li><a href="^6^">12 Minecraft Tips and Tricks to Help You Conquer the Game World</a>: This article gives 12 tips and tricks to help you master the game world, such as how to tame animals, how to craft a bed, how to enchant items, and how to brew potions.</li>
+        <li><a href="^7^">Minecraft Tips - Hidden Tricks And Advanced Tactics For Beginners And Veterans</a>: This article offers some hidden tricks and advanced tactics for both beginners and veterans, such as how to lower render distance and simulation distance to spawn more mobs, how to use ender pearls or Riptide to reach end cities and fly, and how to defeat the Wither in a tunnel.</li>
+    </ul>
 </body>
 </html>
